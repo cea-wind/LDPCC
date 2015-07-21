@@ -5,9 +5,10 @@
   运行环境：MATLAB 2014a
   使用方法：设置相应参数，运行LDPC_Simulation，可自动生成并绘制校验矩阵、生成矩阵。同时Monte Carlo仿真将运行，并将结果保存在文本文档内。Monte Carlo 仿真会消耗大量时间。
 ##2. 代码说明
-+ LDCP_Simulation：脚本
-+ ccsdscheckmatrix：校验矩阵构造，1、2分别对应不同文档
-+ ccsdsgeneratematrix：生成矩阵构造，1、2分别对应不同文档
-+ ldpcdecoder？？：对应三种不同的译码算法
-##3.结果示例
+  + LDCP_Simulation：脚本
+  + ccsdscheckmatrix：校验矩阵构造，1、2分别对应不同文档
+  + ccsdsgeneratematrix：生成矩阵构造，1、2分别对应不同文档
+  + ldpcdecoder？？：对应三种不同的译码算法
+
+##3. 结果示例
 ![误码率曲线](/BER.png)
