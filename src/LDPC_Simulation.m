@@ -12,7 +12,7 @@ clc;clear all;close all;
 
 %%
 % Simulation parameter setting
-EbN0_dB = 10:1:20;                       
+EbN0_dB = 1.5:0.2:2;                       
 FRAMES_NUM = 10;                         
 MAX_ITER_NUM = 250;                      
 MAX_ERROR_FRAME = 200;                   
@@ -80,7 +80,7 @@ for nEbN0 = 1:length(EbN0_dB)
         %%
         % decode
         [iterNum,recoverData] = ...      
-            ldpcdecoderllr(H,HRowNum,HColNum,receiveSignal,MAX_ITER_NUM);
+            ldpcdecoderllr(H,HRowNum,HColNum,receiveSignal,SNR,MAX_ITER_NUM);
             %ldpcdecoderbp(H,HRowNum,HColNum,receiveSignal,SNR,MAX_ITER_NUM);
             %ldpcdecoderminsum(H,HRowNum,HColNum,receiveSignal,SNR,MAX_ITER_NUM);
         % output
