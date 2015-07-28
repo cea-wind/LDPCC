@@ -10,6 +10,8 @@ switch(RATE)
         K=2;
     case 2/3
         K=4;
+    case 3/4;
+        K=6;
     case 4/5
         K=8;
 end

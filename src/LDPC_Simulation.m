@@ -39,11 +39,26 @@ H = ccsdscheckmatrix(SIZE_M,RATE);
 G = ccsdsgeneratematrix(H,SIZE_M,RATE);
 %% 
 % preprocessing
-[r_mark,c_mark] = find(H~=0);
-HColNum = sum(H);
-HRowNum = cell(1,size(H,1));
-for rowH = 1:size(H,1)
-    HRowNum{rowH} = find(r_mark==rowH);
+[r_mark,~] = find(H~=0);
+
+HRowNum_1 = zeros(M,3);
+for rowH = 1:M
+    HRowNum_1(rowH,:) = find(r_mark==rowH);
+end
+
+switch(RATE)
+    case 1/2
+        HRowNum_2 = zeros(M,6);
+    case 2/3
+        HRowNum_2 = zeros(M,10);
+    case 3/4
+        HRowNum_2 = zeros(M,14);
+    case 4/5
+        HRowNum_2 = zeros(M,18);
+end
+
+for rowH = M+1:3*M
+    HRowNum_2(rowH-M,:) = find(r_mark==rowH);
 end
 %% BER Monte Carlo Simulation
 
@@ -80,9 +95,8 @@ for nEbN0 = 1:length(EbN0_dB)
         %%
         % decode
         [iterNum,recoverData] = ...      
-            ldpcdecoderllr(H,HRowNum,HColNum,receiveSignal,SNR,MAX_ITER_NUM);
-            %ldpcdecoderbp(H,HRowNum,HColNum,receiveSignal,SNR,MAX_ITER_NUM);
-            %ldpcdecoderminsum(H,HRowNum,HColNum,receiveSignal,SNR,MAX_ITER_NUM);
+            ccsdsldpcdecoderminsum(H,HRowNum_1,HRowNum_2,receiveSignal,MAX_ITER_NUM,alpha)；
+
         % output
         if(nEbN0==1 && nF==1)
             fprintf(fid,'decoding function is ldpcdecoderllr\n');
