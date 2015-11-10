@@ -59,7 +59,7 @@ for nEbN0 = 1:length(EbN0_dB)
         encodeData = mod(message*G,2);
         %%
         % modulate
-        transmitSignal = 2*encodeData - 1;   % 0-1;1--1
+        transmitSignal = 1 - 2*encodeData;   % 0-1;1--1
         transmitSignalPower = sqrt(var(transmitSignal));
         transmitSignal = transmitSignal/transmitSignalPower; %Normalization
         %%
