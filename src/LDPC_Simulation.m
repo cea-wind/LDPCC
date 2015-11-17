@@ -23,7 +23,8 @@ iterNumTotal = zeros(1,length(EbN0_dB));
 INFO_LENGTH = 1024;                      
 RATE = 1/2;                              
 SIZE_M = 512;                            
-
+M = 512;
+alpha = 0.8;
 %%
 % open(create) a file to save important data.
 FILE_NAME = ['LDPC_CCSDS_' datestr(now,'yyyymmdd') '.txt'];
@@ -67,6 +68,9 @@ end
 for nEbN0 = 1:length(EbN0_dB)
 %%
 % Monte Carlo Simulation
+        SNR_dB = EbN0_dB((nEbN0)) + 10*log10(2)+10*log10(RATE);
+        SNR = 10^(SNR_dB/10);
+        sigma_noise = 1/sqrt(SNR);
     for nF=1:FRAMES_NUM
         %%
         % encode
@@ -74,20 +78,14 @@ for nEbN0 = 1:length(EbN0_dB)
         encodeData = mod(message*G,2);
         %%
         % modulate
-        transmitSignal = 2*encodeData - 1;   % 0-1;1--1
-        transmitSignalPower = sqrt(var(transmitSignal));
-        transmitSignal = transmitSignal/transmitSignalPower; %Normalization
+        transmitSignal = 1-2*encodeData;   % 0-1;1--1
         %%
         % AWGN Channel, the relationship between SNR and EbN0
         %%
         % 
         % $$SNR = \frac{{{E_b}}}{{{N_0}}} + 2{\log _{10}}^M + 2{\log _{10}}^{RATE}$$
         % 
-        
-        SNR_dB = EbN0_dB((nEbN0)) + 10*log10(2)+10*log10(RATE);
-        SNR = 10^(SNR_dB/10);
-        noise = randn(1,length(transmitSignal));
-        noise = noise/sqrt(SNR);     
+        noise = sigma_noise*randn(1,length(transmitSignal));   
         receiveSignal = transmitSignal + noise;
         %%
         % punching
@@ -95,7 +93,7 @@ for nEbN0 = 1:length(EbN0_dB)
         %%
         % decode
         [iterNum,recoverData] = ...      
-            ccsdsldpcdecoderminsum(H,HRowNum_1,HRowNum_2,receiveSignal,MAX_ITER_NUM,alpha)；
+            ccsdsldpcdecoderminsum(H,HRowNum_1,HRowNum_2,receiveSignal,MAX_ITER_NUM,alpha);
 
         % output
         if(nEbN0==1 && nF==1)
