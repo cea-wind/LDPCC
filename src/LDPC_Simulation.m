@@ -12,9 +12,9 @@ clc;clear all;close all;
 
 %%
 % Simulation parameter setting
-EbN0_dB = 1.5:0.2:2;                       
-FRAMES_NUM = 10;                         
-MAX_ITER_NUM = 250;                      
+EbN0_dB = 1.5:0.2:2.2;                       
+FRAMES_NUM = 100;                         
+MAX_ITER_NUM = 200;                      
 MAX_ERROR_FRAME = 200;                   
 bitError = zeros(1,length(EbN0_dB));     
 BER = bitError;                          
@@ -23,7 +23,7 @@ iterNumTotal = zeros(1,length(EbN0_dB));
 INFO_LENGTH = 1024;                      
 RATE = 1/2;                              
 SIZE_M = 512;                            
-
+NORM_FACTOR = 0.8;
 %%
 % open(create) a file to save important data.
 FILE_NAME = ['LDPC_CCSDS_' datestr(now,'yyyymmdd') '.txt'];
@@ -80,9 +80,9 @@ for nEbN0 = 1:length(EbN0_dB)
         %%
         % decode
         [iterNum,recoverData] = ...      
-            ldpcdecoderllr(H,HRowNum,HColNum,receiveSignal,SNR,MAX_ITER_NUM);
-            %ldpcdecoderbp(H,HRowNum,HColNum,receiveSignal,SNR,MAX_ITER_NUM);
-            %ldpcdecoderminsum(H,HRowNum,HColNum,receiveSignal,SNR,MAX_ITER_NUM);
+            ldpcdecoderminsum(H,HRowNum,HColNum,receiveSignal,MAX_ITER_NUM,NORM_FACTOR);
+            %ldpcdecoderllr(H,HRowNum,HColNum,receiveSignal,SNR,MAX_ITER_NUM);
+            %ldpcdecoderbp(H,HRowNum,HColNum,receiveSignal,SNR,MAX_ITER_NUM);//有数值不稳定现象
         % output
         if(nEbN0==1 && nF==1)
             fprintf(fid,'decoding function is ldpcdecoderllr\n');
@@ -109,7 +109,7 @@ for nEbN0 = 1:length(EbN0_dB)
              break;
          end
          if (mod(nF,100)==0)
-            BER(nEbN0) = bitError(nEbN0)/nF/320;
+            BER(nEbN0) = bitError(nEbN0)/nF/length(message);
             fprintf('\n-------------------------------\n');
             fprintf('Eb/No = %e \n',EbN0_dB(nEbN0));
             fprintf('Total Frames = %d, ',nF);

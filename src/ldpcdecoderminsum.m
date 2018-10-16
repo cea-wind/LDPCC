@@ -1,4 +1,4 @@
-function [ iter,decoderData ] = ldpcdecoderminsum(H,HRowNum,HColNum,receiveSignal,MAX_ITER_NUM)
+function [ iter,decoderData ] = ldpcdecoderminsum(H,HRowNum,HColNum,receiveSignal,MAX_ITER_NUM,NORM_FACTOR)
 %LDPCC decode algorithm , based on the Min-Sum algorithm
 % H: check matrix
 % HRowNum,HColNum: index generate from check matrix
@@ -14,7 +14,7 @@ function [ iter,decoderData ] = ldpcdecoderminsum(H,HRowNum,HColNum,receiveSigna
 
 [~,N] = size(H);    
 
-vl = -receiveSignal;
+vl = receiveSignal;
 decoderData = zeros(1,N);
 
 uml = zeros(1,sum(HColNum));
@@ -49,7 +49,7 @@ for iter=1:MAX_ITER_NUM
                 end
             end
         end
-        uml(L_col) = vmltemp;
+        uml(L_col) = NORM_FACTOR*vmltemp;
     end
     %variable nodes information process
     ColStart = 1;

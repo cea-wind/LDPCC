@@ -16,7 +16,7 @@ function [ iter,decoderData ] = ldpcdecoderbp(H,HRowNum,HColNum,receiveSignal,SN
 % The structure of this function is the same as ldpcdecoderminsum
 
 
-p0 = 1./(1+exp(2*receiveSignal*SNR));
+p0 = 1./(1+exp(-2*receiveSignal*SNR));
 p1 = 1-p0;
 decoderData = zeros(1,length(HColNum));
 

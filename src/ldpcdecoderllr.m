@@ -17,7 +17,7 @@ function [ iter,decoderData ] = ldpcdecoderllr(H,HRowNum,HColNum,receiveSignal,S
 
 [~,N] = size(H);    
 
-vl = -2*receiveSignal*SNR;
+vl = 2*receiveSignal*SNR;
 decoderData = zeros(1,N);
 
 uml = zeros(1,sum(HColNum));
